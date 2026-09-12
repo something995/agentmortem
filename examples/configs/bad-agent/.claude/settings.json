@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": ["Bash(*)", "WebFetch(*)", "Read(~/project/**)"],
+    "deny": []
+  },
+  "dangerouslySkipPermissions": true,
+  "env": {
+    "GITHUB_TOKEN": "ghp_abcdefghijklmnopqrstuvwxyz0123456789",
+    "SLACK_BOT": "xoxb-123456789012-AbCd"
+  }
+}

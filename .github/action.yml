@@ -1,0 +1,62 @@
+name: "AgentMortem"
+description: >-
+  Post-mortem forensics for AI agent sessions. Scans transcripts and agent
+  configuration for prompt injection, secret leakage, and risky capability
+  sequences, then uploads SARIF to GitHub code scanning.
+author: "AgentMortem contributors"
+branding:
+  icon: "search"
+  color: "orange"
+
+inputs:
+  path:
+    description: "File or directory to scan (transcript, transcript dir, or agent config)"
+    required: true
+    default: "."
+  mode:
+    description: "auto | transcript | config"
+    required: false
+    default: "auto"
+  fail-on:
+    description: "Minimum severity that fails the job: off | info | low | medium | high | critical"
+    required: false
+    default: "medium"
+  sarif-file:
+    description: "Where to write the SARIF report"
+    required: false
+    default: "agentmortem.sarif"
+  version:
+    description: "agentmortem package spec to install (bump to new releases)"
+    required: false
+    default: "agentmortem>=0.1.0"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install AgentMortem
+      shell: bash
+      run: python -m pip install --quiet "${{ inputs.version }}"
+
+    - name: Run AgentMortem (SARIF)
+      shell: bash
+      run: |
+        status=0
+        python -m agentmortem \
+          scan "$AGENTMORTEM_PATH" \
+          --mode "$AGENTMORTEM_MODE" \
+          --fail-on "$AGENTMORTEM_FAIL_ON" \
+          --format sarif \
+          --output "$AGENTMORTEM_SARIF" \
+          || status=$?
+        echo "agentmortem exited with $status"
+        exit $status
+      env:
+        AGENTMORTEM_PATH: ${{ inputs.path }}
+        AGENTMORTEM_MODE: ${{ inputs.mode }}
+        AGENTMORTEM_FAIL_ON: ${{ inputs.fail-on }}
+        AGENTMORTEM_SARIF: ${{ inputs.sarif-file }}
+
+    - name: Upload SARIF to code scanning
+      uses: actions/github-code-scanning/upload-sarif@v4
+      with:
+        sarif_file: ${{ inputs.sarif-file }}
