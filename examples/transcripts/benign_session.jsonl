@@ -1,0 +1,4 @@
+{"type": "user", "message": {"role": "user", "content": [{"type": "text", "text": "Please summarize this Python module and suggest improvements."}]}}
+{"type": "assistant", "message": {"role": "assistant", "content": [{"type": "text", "text": "Here are three improvements: (1) add type hints, (2) extract the retry loop into a helper, (3) use pathlib instead of os.path."}]}}
+{"type": "assistant", "message": {"role": "assistant", "content": [{"type": "tool_use", "id": "tu_01", "name": "bash", "input": {"command": "python -m pytest tests/unit -q"}}]}}
+{"type": "user", "message": {"role": "user", "content": [{"type": "tool_result", "tool_use_id": "tu_01", "content": [{"type": "text", "text": "12 passed, 3 skipped in 0.42s"}]}]}}
